@@ -29,6 +29,8 @@
 | Status       | One of: - "Proposed": if the project stakeholders haven't agreedwith it yet. - "Accepted": once it is agreed - "Superseded": Decision has been reversed (in this case, provide reference to new decision)                                                                   |                                              |
 | Consequences | Describes the resulting context, after applying the decision.  All consequences should be listed here, not just the "positive" ones. A particular decision may have positive, negative, and neutral consequences, but all of them affect the team and project in the future |                                              |
 
-[Introduction to Architecture Decision Records](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions)
-[Homepage of the ADR GitHub organization](https://adr.github.io/)
-[adr-tool to generate architecture decision records](https://github.com/npryce/adr-tools)
+## Further Reading
+
+- [Introduction to Architecture Decision Records](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions)
+- [Homepage of the ADR GitHub organization](https://adr.github.io/)
+- [adr-tool to generate architecture decision records](https://github.com/npryce/adr-tools)
