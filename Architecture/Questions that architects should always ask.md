@@ -1,5 +1,7 @@
 # Questions that Architects / Backend Engineers should always ask
 
+## Miscellanious
+
 **1. What if there are multiple instances of my service/application running?**
 
 _Example 1_:
@@ -27,8 +29,31 @@ _Example 2_:
 - Circuit breaker pattern
 - Redundancy
 
-**4. What if messages are received out of order?**
+## Messaging
 
-**5. What if duplicated messages are received?**
+**1. What if messages are received out of order?**
 
-**6. What are all the error scenarios?**
+**2. What if duplicated messages are received?**
+
+## Integrations
+
+**1. How do the two systems communicate with each other**
+
+- What format is the data in: JSON, XML, CSV?
+- How is the data received: Push, Polling?
+- How is the data sent: HTTP, SOAP?
+- How often is data sent/received: Batch, Real-Time?
+- Which data fields are optional and which fields are mandatory?
+- For date fields: Which timezone is being used?
+- Complete list of error codes
+- For asynchronous communication: Is there an error queue?
+
+**2. If a synchronous request to a external service times-out, can we determine the state on the 3rd party system**
+
+- External service in this context refers to a service that is outside our microservice cluster.
+
+**3. What is the availability of the external system**
+
+- External service in this context refers to a service that is outside our microservice cluster.
+
+**4. List possible error scenarios? Draw sequence diagrams**
