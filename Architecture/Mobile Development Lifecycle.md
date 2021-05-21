@@ -12,15 +12,20 @@ The workflow consists of the following steps:
 
 The remainder of this article will elaborate on the following aspects of this workflow:
 
-1. Advantages / Disadvantages of separating SDK from Mobile Application
+1. Advantages / Disadvantages of this workflow
 2. Mobile SDK architecture
 3. Mobile SDK Pipeline
 4. Responsibilities of Mobile Architect vs Mobile Frontend Developer
 5. Mobile Team Structure 
 
-## 2. Mobile SDK architecture
+## 1. Advantages / Disadvantages of this workflow
 
-
+| Advantages                                                   | Disadvantages                            |
+| ------------------------------------------------------------ | ---------------------------------------- |
+| Models and networking logic are separate from ViewModels and Views | Slightly more complicated build pipeline |
+| Mobile Architect can ensure good code coverage on SDK implementation. Mobile Frontend can focus on delivering a good UI on a range of devices; have more time to write UI tests |                                          |
+| Mobile Developers focus on their strengths: those interested in design focus on frontend. Those interested in architecture focus on architecture |                                          |
+| If the organisation offers its mobile SDK to third-party developers, then this approach gives internal developers to  test out the SDK themselves to ensure that it's easy-to-use. |                                          |
 
 ## 4. Responsibilities of Mobile Architect vs Mobile Frontend Developer
 
@@ -29,5 +34,12 @@ The remainder of this article will elaborate on the following aspects of this wo
 | - Commits changes to the BFF and the SDK                     | - Commits changes to the UI                                  |
 | - Specializes in: optimising performance, reducing battery consumption, building offline-first experiences and dealing with memory leaks | - Specializes in building  customized components and UIs.  Responsible for delivering a modern, user-friendly experience |
 
+## 5. Mobile Team Structure 
 
+```yaml
+Development Team:
+  Squads:
+  Orders:
+- 
+```
 
