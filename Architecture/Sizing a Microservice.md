@@ -41,10 +41,11 @@ To further complicate matters, the gate system required that a bespoke API call 
 - add a piano to Joe's appointment
 - add a chair to Joe's appointment
 
-A booking is only deleted when all of its cargo is removed. In other words, to cancel Trucker Joe's booking with the gate system, the following API calls need to be made:
+A booking can only deleted when all of its cargo is removed. In other words, to cancel Trucker Joe's booking with the gate system, the following API calls need to be made:
 
-- an appointment  appointment to remove the chair from Joe's appointment
-- an appointment  appointment to remove the piano from Joe's appointment
+- remove the chair from Joe's appointment
+- remove the piano from Joe's appointment
+- cancel Trucker Joe's appointment
 
 If the call to the create a trucker appointment fails due to a timeout, a call needs to be made to check if the appointment did in fact get created. If the appointment was created, continue with the adding each piece of cargo to the appointment.
 
