@@ -77,4 +77,30 @@ With more experience, this is the architecture I would have gone with if I were 
 
 2. The gate system client module uses synchronous API calls rather than asynchronous message queues to communicate with the gate system. This makes the error scenarios much simpler to handle and to debug. 
 
-	There was never actually a need to design the system to be event-driven. The  load wasn't there! It was unlikely to ever be there.
+	There was never actually a need to design the system to be event-driven. 
+	We had built an event-driven architecture in the hopes of building a highly available system. But the system did not need to be highly-available - it needed to be consistent and correct. 
+
+	It was much more important to build something simple that produced consistent output, than to try to achieve consistency in a needlessly complex event-driven distributed system.
+
+### When To split Bounded Contexts into Multiple Services
+
+So now let's say you have a single service that holds multiple bounded-contexts. You've discovered that the two contexts, do not have complex and frequent interactions with each other and they could quite comfortably live in separate microservices. The question is should you split them?
+
+The answer to this question should be driven by data. Specifically, the data you need to consider are:
+
+**Requests per second**: Is the combined service getting too many requests? This needs to be considered in conjunction with CPU Usage.
+
+**CPU Usage**: Is having two bounded-contexts together placing a heavy load on the system. Does one of the bounded-contexts need to do more CPU-intensive work than the other?
+
+**Failed Requests**: As a result of heavy load or high CPU usage, are many of the requests failing with errors like request timeout? 
+
+If the answer to these questions is yes, then you have three options:
+
+1. Horizontal Scaling: run the combined service on an additional node to balance the load better
+2. Vertical Scaling: run the combined service on a node that has more memory and CPUs.
+3. Split the two bounded-contexts into separate services
+
+The correct choice needs to be determined on the basis of cost.
+It obviously costs more to add an extra node to your cloud infrastructur (or enhance the existing ones), but creating and maintaining an extra service is more challenging than having them together: implementation and debugging both become more difficult, you'll need to set up devOps around the new service and you might even need to hire more developers. 
+
+A lot of businesses don't mind simply throwing an extra server at the problem. 
