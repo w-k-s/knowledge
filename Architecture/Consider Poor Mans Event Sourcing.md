@@ -2,7 +2,7 @@
 
 ## Case Study
 
-### Goal
+### Goal
 
 Recently I worked on a feature where, at the end of a day, a CSV  report needed to be generated every midnight; this report had to be archived on S3 and uploaded to the SFTP server of a regulatory authority.
 
