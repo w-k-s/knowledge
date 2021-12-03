@@ -1,6 +1,10 @@
-# Consider Poor Man's Event Sourcing
+# Using Event Driven Architecture when it makes sense
+
+I am noting the following case study (and perhaps in future, case studies) as an example of when Event Driven Architecture worked well.
 
 ## Case Study
+
+This first case study doesn't really match the definition of Event Driven Development but it could easily be adapted to do so. I've written the case study down as we implemented it because we implemented it in a simple way and I prefer to do things as simple as possible. The second benefit is that in case it turns out that there were limitations to the simple approach we took, I can update the article with precise problems and motivations for a more complex solution.
 
 ### Goal
 
@@ -67,5 +71,3 @@ This proved to be very advantageous, for a number of reasons:
 2. **We could query if a prerequisite steps had completed**. For example, the archiving step had a dependency on the row creation step so we could run a query to make sure that the previous step had been successful.
 3. **We could keep track of how long each step took and when exactly it completed**. The more users that used our application, the larger the report would be and the report _had_ to be submitted to the regulatory authority before midnight. Submission after midnight would have resulted in a lot of time-consuming administrative work. 
 By storing the time at which each event completed, we could monitor how long each step took (for any single report) and proactively take action if performance was becoming a problem.
-
-The lesson that I learnt from this experience is that while building a full-fledged event-sourced application can be quite complicated (due to the steep learning curve and the infrastructure required to make it work), a simplified version of it can be quite beneficial in building a feature in a robust, idempotent and monitorable way.
