@@ -30,7 +30,7 @@ And yet, despite our ability to return error details, most programmers don't bot
 
 I take error handling very seriously. If I'm writing the code to describe what to do when something goes wrong (e.g. in the `catch` block), I want to give myself as much information as I can so that I can recognise the problem immediately and start working on the solution. 
 
-I make my life easier and I expect other developers to make their lives (and in doing so, my life) easier as well. So ensuring that errors are handled and the complete context of the error is logged is something that I pay close attention when reviewing PRs.
+I make life easier for myself and I expect other developers to do the same. So ensuring that errors are handled and the complete context of the error is logged is something that I pay close attention when reviewing PRs.
 
 ## Simplicity
 
@@ -40,5 +40,7 @@ I make my life easier and I expect other developers to make their lives (and in 
 
 In this article, I wanted to document the 3 things that matter the most to me when I review a PR.
 This is not to say that these are the 3 things that every developer should look at when they review PRs.
+
 On the contrary, I think every developer should identify the things that matter the most to them when the review someone elses code.
+
 The greatest benefit can be derived from the PR process when different developers with different concerns share their feedback: it enables the code to be improved from a multitude of dimensions.
