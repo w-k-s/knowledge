@@ -1,0 +1,1 @@
+- The [RACI model](https://www.forbes.com/advisor/business/raci-chart/) is a really nice way of documenting roles and responsibilities.
