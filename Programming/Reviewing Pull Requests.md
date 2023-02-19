@@ -34,7 +34,61 @@ I make life easier for myself and I expect other developers to do the same. So e
 
 ## Simplicity
 
+Simplicity when it comes to code means the code is easy to follow and, by extension, easy to debug and easy to extend. 
 
+I evaluate that the code is simple by asking myself: 
+
+**Do I understand what it is doing well enough to be able to explain it to someone else?**
+
+- If not, is it because the code is complex or complicated?
+- If it is complex, then I will work with the developer to simplify it. 
+- If it is complicated, I will ask the developer to document it.
+
+**Does the code have a nice flow** 
+
+Code has a nice flow when you have a `main` method that gives you a story-like outline of what needs to happen.
+
+You can then drill down into the methods called in this `main` method to understand how specific parts of the logic are achieved. I'm not sure if I explained that well so here's a contrived example: 
+
+```java
+public class TicTacToeController{
+
+	private TicTacToeView view;
+	private TicTacToe game;
+
+	public TicTacToeController(int numberOfPlayers){
+		view = new TicTacToeView();
+		game = new TicTacToe(numberOfPlayers);
+	}
+
+	public void start(){
+		while(!game.isOver()){
+			if(!game.addMove(nextMove())){
+				view.showError("Cell is already occupied");
+				continue;
+			}
+			updateGrid();
+		}
+		view.showWinner(game.winner());
+	}
+
+	private Move nextMove(){
+		Player player = game.nextPlayer();
+		return switch(player){
+			case Player.ONE, Player.TWO -> view.promptMove(player);
+			case Player.AI -> game.generateMove();
+		}
+	}
+
+	private void updateGrid(){
+		final Mark[] grid = game.grid();
+		for(int i=0; i<grid.length; i++){
+			view.mark(i, grid[i]);
+		}
+		view.redraw();
+	}
+}
+```
 
 ## Conclusion
 
