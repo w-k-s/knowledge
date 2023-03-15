@@ -19,3 +19,25 @@
 8. ActiveMQ is traditional messaging system where as Kakfa is meant for distributed processing system with huge amount of data and effective for stream processing
 
 Due to above efficiencies, Kafka throughput is 2x - 4x times more than normal messaging systems like ActiveMQ and RabbitMQ.
+
+----
+
+## Selecting a message broker
+
+Copying an answer I gave to another engineer to help them decide when a particular kind of Message Broker ought to be used:
+
+**Apache Kafka** 
+
+- Kafka is used when you have a stream to which data is added very quickly from one end, and the data needs to be processed very quickly by a number of downstream systems on the other end. 
+- Think of Kafka like checking-in for a flight at an airport. The check-in area is divided into a  number of check-in zones (similar to partitions in Kafka), and each zone has a number of counters to cater to a single airline (similar to topics in Kafka). This arrangement allows for a number of passengers for a number of downstream flights to be processed very quickly.
+
+**RabbitMQ/ActiveMQ**
+
+- RabbitMQ and ActiveMQ are when you need to distribute tasks between different downstreams: it's about receiving a message, figuring out where it needs to go and trying to make sure it gets there. Performance isn't that much of a concern.
+- Think of RabbitMQ/ActiveMQ like a mailroom. Mail is received, sorted into bags for delivery (like Delivery Exchanges) and then delivered to the recipient. It's pretty reliable but not always fast.
+
+**ZeroMQ, Redis**
+
+- Zero MQ, the way I understand it, is a to-do list. It manages tasks that need to be done. The key thing to remember is that you're okay with losing track of the tasks.
+- Think of Zero MQ like an inbox tray at a disk. You put work in that you need to do at the bottom of the to-do pile. Once you've worked through one file, you move it to the done pile and then pick up the next file.
+- At any point, a cat can flip over the inbox tray. When that happens, there's a mess of paper on the floor and it's difficult to figure out what belongs where. 
