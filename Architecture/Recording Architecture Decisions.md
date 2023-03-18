@@ -2,11 +2,17 @@
 
 ## Problem
 
-- One of the hardest things to track during the life of a project is the motivation behind certain decisions
-- When developers don't know the motivation behind a decision, they may
+- One of the hardest things to track during the life of a project is the motivation behind certain decisions. For example: "Why has a method been implemented in this way?",  "This line of code seems superfluous, what does it do"
+
+- When developers don't know the motivation behind a decision, they may:
   
-  1. **Blindly accept the decision**: OK, if the decision is still valid. Not OK, if the context has changed and the decision should really be revisited.
-  2. **Blindly change the decision**: OK if the decision needs to be reversed. Not OK, damaging the project's overall value without realizing it
+1. **Blindly accept the decision**: E.g. Refuse to change any of the existing code or architecture.
+
+  This is fine when the decision is still valid but if the context has changed, hanging on to crud could lead to increased confusion and complexity down the line.
+
+2. **Blindly change the decision**: E.g. I don't know what this is for, let's get rid of it. "Move fast and break things, baby!"
+
+  This can be dangerous, because most software is tied to a business and the developer isn't just blind to the what the code does, they're also blind to what impact it has to the business e.g. loss in revenue, loss in trust e.t.c.
 
 ## Solution
 
