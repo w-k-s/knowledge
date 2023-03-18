@@ -12,7 +12,7 @@
 
 2. **Blindly change the decision**: E.g. I don't know what this is for, let's get rid of it. "Move fast and break things, baby!"
 
-  This can be dangerous, because most software is tied to a business and the developer isn't just blind to the what the code does, they're also blind to what impact it has to the business e.g. loss in revenue, loss in trust e.t.c.
+  This can be dangerous because most software is tied to a business and the developer isn't just blind to the what the code does, they're also blind to what impact the piece of code or architecture has on the business e.g. loss in revenue, loss in customer trust e.t.c.
 
 ## Solution
 
