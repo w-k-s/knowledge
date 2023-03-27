@@ -18,13 +18,22 @@ I recently added a seminar hosted by AWS called "Data Transformation Day". These
 
 ## Storing Data
 
-### NoSQL
-- The biggest impact of NoSQL in the tech industry is that whereas before you had to figure out how to map your application's data to a relational structures (impedence mismatch), now you have to look at your use-case and figure out which storage engine best fits your needs.
-- **Review, Repeat, Review**: Modelling your data on any NoSQL db is tricky, and likely needs to evolve with time. It's important to monitor the how your data is read and written by your applications and review if your data model can be improved to further optimise the process.
+### Aurora
+- MySQL/Postgres compatible database (no vendor lock-in)
+- Enhanced performance for 2 main reasons:
+	- Page size increased to 16KB so writes can be written directly to storage (no need of double buffers)
+	- Storage is in replicated cloud storage
+- Serverless version available.
 
 ### DynamoDB
+- The biggest impact of NoSQL in the tech industry is that whereas before you had to figure out how to map your application's data to a relational structures (impedence mismatch), now you have to look at your use-case and figure out which storage engine best fits your needs.
 - [**Single table design**](https://aws.amazon.com/blogs/compute/creating-a-single-table-design-with-amazon-dynamodb/) 1 application has one table (or you could say, 1 microservice = 1 table)
 - DynamoDB removes the burden figuring out how many servers and partitions you need on the DB admin and architect; you just need to know your anticipated read/write workload and DynamoDB will figure out how to handle it.
+- Modelling:
+	- Understand the use-case (Nature of the data: OLTP, OLAP, Full Text, Relationship between entities, What does concurrent access look like, Time series, Archiving needs)
+	- Identify the access patterns (Read workload, write workload, Query aggregations & KPIs
+	- Data Modelling using NoSql Design Patterns (Single Table Design, Identify Partition Key = Primary + Sort Key)
+ 	- Review, Repeat, Review: Modelling your data on any NoSQL db is tricky, and likely needs to evolve with time. It’s important to monitor the how your data is read and written by your applications and review if your data model can be improved to further optimise the process.
 
 ## Data Democratization
 - Make data accessible and understandable to a wider range of people within an organization, so that they can make better decisions.
