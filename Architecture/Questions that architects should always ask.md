@@ -31,9 +31,11 @@ _Example 2_:
 
 ## Messaging
 
-**1. What if messages are received out of order?**
+**1. What if the message is never received?**
 
 **2. What if duplicated messages are received?**
+
+**3. What if messages are received out of order?**
 
 ## Integrations
 
