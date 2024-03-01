@@ -1,6 +1,6 @@
 # Questions that Architects / Backend Engineers should always ask
 
-## Miscellanious
+## Horizontal Scaling
 
 **1. What if there are multiple instances of my service/application running?**
 
@@ -24,10 +24,20 @@ _Example 2_:
 
 **2. What if this endpoint is called twice simultaneously?**
 
-**3. What if X is down?**
+- Race Conditions
+- Idempotency
 
-- Circuit breaker pattern
-- Redundancy
+## Data
+
+**1.  Which system is the source of truth for X** 
+
+- For a given data, there should be one source of truth e.g. The source of truth for a banking backend will likely be the core-banking engine.
+- Multiple sources of truth should be avoided. An architect should always try to avoid a solution with multiple sources of truth. At the very least, strongly recommend it.
+
+**2. Data Residency/Sovereignty**
+
+- Are there legal or business requirements that data can not be transmitted/stored outside of a particular region.
+- This is a very crucial question as it greatly impacts any solution design and often choice of technologies.
 
 ## Messaging
 
@@ -59,3 +69,15 @@ _Example 2_:
 - External service in this context refers to a service that is outside our microservice cluster.
 
 **4. List possible error scenarios? Draw sequence diagrams**
+
+**5. What if X is down?**
+
+- Circuit breaker pattern
+- Redundancy
+
+## Compliance Policies
+
+**1. Is this business willing to use Open-source technologies?**
+
+- Many companies refuse to adopt solutions built with open source technologies. They favour Oracle over PostgreSQL, IBM MQ over Kafka e.t.c. 
+- I'm not a fan of such blanket policies! but important to bear in mind before designing a solution.
