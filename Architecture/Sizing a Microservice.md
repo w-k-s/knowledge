@@ -82,7 +82,7 @@ With more experience, this is the architecture I would have gone with if I were 
 
 	It was much more important to build something simple that produced consistent output, than to try to achieve consistency in a needlessly complex event-driven distributed system.
 
-### When To split Bounded Contexts into Multiple Services
+### When To split Bounded Contexts into Multiple Services
 
 So now let's say you have a single service that holds multiple bounded-contexts. You've discovered that the two contexts, do not have complex and frequent interactions with each other and they could quite comfortably live in separate microservices. The question is should you split them?
 
