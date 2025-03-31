@@ -1,6 +1,98 @@
 # PromQL
 
-##  Flask OpenTelemetry Setup
+## 1. Meters
+
+### 1.1 Counters
+
+- A counter is a meter whose value can only increment. 
+- Decrecments can occur when the counter is reset. This typically occurs if the node restarts.
+- If an application has multiple replicas, a label must be used to distinguish count of each replica, otherwise the counter will display erratic behaviour.
+
+Let's explore the last point further.
+- Consider you have multiple replicas of a microservice e.g. the `replicaCount` is set for your service is set to 3 on your Kubernetes Cluster.
+- Each replica has the same codebase therefore each replica has a counter with the same name e.g. `endpoint_requests_total` that increments whenever an API endpoint is called.
+- A load balancer routes incoming requests to one of the available replicas.
+- Let's consider the following sequence of events:
+    - At 00:00, Replica 1 receives a request, Replica 1's counter increments to 1
+    - At 00:05, Replica 1 receives a request, Replica 1's counter increments to 2
+    - At 00:10, Replica 2 receives a request, Replica 2's counter increment to 1
+    - At 00:15, Replica 1 receives a request, Replica 1's counter increment to 3
+    - At 00:20, Replica 3 receives a request, Replica 3's counter increment to 1
+- If all counters use the same name, without any label to distinguish between the node, then we will see our counters value oscillating:
+
+![](./images/promql-counter-without-instanceid.excalidraw.png)
+
+- If the counters value oscilates like this, then any function that we apply on the counter e.g. `increase`, `rate` will result in wild values.
+- To distinguish between the counters, we assign a label to the counter when it is created (at the time that the application launched). This label is typically called `instance.id` and it is assigned a value that uniquely identifies the replica. For example, this could be the instance ID of an EC2.
+- This ofcourse raises the question, what if we wanted to total the count across all instances; see the `sum by` aggregate function below.
+
+![](./images/promql-counter-with-instanceid.excalidraw.png)
+
+The same concept applies for applications that run on multiple threads or applications that are forked to run on multiple processes. Let's consider the example of a Flask application running on Gunicorn. 
+
+- Gunicorn runs a Flask application on multiple workers. Each worker is capable of handling HTTP requests. We can think of each worker as a replica of the flask application.
+- Gunicorn creates workers in one of 2 modes:
+    - With `preloading`, a worker is created in a single process. Then, the process is forked and each child process receives copy of a resources from the parent process. This includes global variables, sockets and database connections.
+    - Without `preloading`, a worker is created in separate processes. Each process has its own sockets, database connections and global variables.
+
+- Therefore, when `preloading` you have to be careful that the same `instance.id` is not copied to each forked process.
+- This can happen, for example, if the `instance.id` is set to the Process ID `getpid()` on the main process. Once the main process if forked, each child process has the same `instance.id` set to the id of the parent process, rather than the id of the forked child process. In this case, you could expect to see oscillating values of the counter.
+
+![](./images/gunicorn-preloading.excalidraw.png)
+
+
+## 2. Query Functions
+
+### 2.1 `increase`
+
+- Given a counter with value `v`, the `increase` is the difference between the value at the current time and the value at an earlier time:
+
+- For example, let's say there is a counter named `my_counter`:
+    - At 12:00, the value of `my_counter` is is 10
+    - 10 minutes later, the value of `my_counter` is 12; 
+    - The increase over 10m is 2. 
+
+- In PromQL this is expressed as `increase(my_counter{}[10m])`
+
+- Mathematically you might express this as `Δv = v[t] - v[t-Δt]` where:
+    - `Δv` denotes increase
+    - `v[t]` is the value of the counter at time _t_.
+    -  `Δt` is the time interval (10 minutes in the above example).
+    - `v[t-Δt]` is the value at an interval before t2.
+
+![Prometheus Increase](./images/promql-increase.excalidraw.png)
+
+### 2.2 `rate`
+
+- Rate is the rate of increase of the value per second
+- Mathematically you might express this as `Rate = Δv/Δt` where Δt is **always** measured in seconds.
+- For example:
+    - At 12:00, the value of `my_counter` is is 10
+    - 10 minutes later, the value of `my_counter` is is 12; 
+    - The rate over 10m is 0.003. 
+        - 10 minutes  = 600 seconds
+        - Δv = 2
+        - Δt = 600
+        - Rate = 2/600 = 0.003
+- In PromQL this is expressed as `rate(my_counter{}[10m])`
+
+![Prometheus Rate](./images/promql-rate.excalidraw.png)
+
+## 3. Aggregate Functions
+
+### 3.1 `sum by`
+
+- Suppose we wanted the total number of API calls for a particular endpoint e.g. `get_user_profile`.
+- As mentioned earlier, if we have 3 replicas of the web service, then we will have 3 copies of the counter.
+- To get the total number of API calls for each endpoint, we can group by the endpoint num and then sum the counter:
+
+```
+sum(endpoint_requests_total) by (endpoint)
+```
+
+![](./images/promql-sum-by.excalidraw.png)
+
+##  4. Flask OpenTelemetry Setup
        
 *app.py*
 ```python
@@ -147,49 +239,3 @@ def _setup_instrumentation(app):
 
     FlaskInstrumentor().instrument_app(app)
 ```
-
-## 1. Counters
-
-- A counter's value only increments. 
-
-- Decrecments can occur when the counter is reset. Typically if the node restarts.
-
-- You may see also decrements when the service has multiple replicas using the same counter name. The counter will have a different value in each  replica. For example:
-    - Node A. Counter 'A' = 5
-    - Node B. Counter 'A' = 1
-
-- You can distinguish between counters on different replicas by `setting instance.id` 
-
-- For a forked processes such as a Flask application running on gunicorn, you could use the process_id as the `instance.id` to distinguish between counters with the same name.
-
-- However, the instance id must be set after the process is forked. Otherwise the `instance.id` set on the resource will be the same on all processes. 
-
-![Prometheus Instance Vector](./images/promql-instance-vector.png)
-
-### 1.1 `increase`
-
-- Given a counter with value `v`, the increase `Δv` is: 
-
-`Δv = v[t2] - v[t2-Δt]`
-
-- For example:
-    - At 12:00, value is is 10
-    - 10 minutes later, the value is 12; 
-    - The increase over 10m is 2. 
-    - `increase(counter{name="value"}[10m])`
-
-![Prometheus Increase](./images/promql-increase.excalidraw.png)
-
-## Rate
-
-- Rate is the rate of increase of the value.
-
-- `Rate = Δv/Δt` where t is in seconds.
-
-- For example:
-    - At 12:00, value is is 10
-    - 10 minutes later, the value is 12; 
-    - The rate over 10m is 0.003. 
-    - `rate(counter{name="value"}[10m]) = 0.003`
-
-![Prometheus Rate](./images/promql-rate.excalidraw.png)
