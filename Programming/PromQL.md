@@ -1,8 +1,6 @@
 # PromQL
 
-## 1. Meters
-
-### 1.1 Counters
+## 1. Counters
 
 - A counter is a meter whose value can only increment. 
 - Decrecments can occur when the counter is reset. This typically occurs if the node restarts.
@@ -40,10 +38,7 @@ The same concept applies for applications that run on multiple threads or applic
 
 ![](./images/gunicorn-preloading.excalidraw.png)
 
-
-## 2. Query Functions
-
-### 2.1 `increase`
+### 1.1 `increase`
 
 - Given a counter with value `v`, the `increase` is the difference between the value at the current time and the value at an earlier time:
 
@@ -62,7 +57,39 @@ The same concept applies for applications that run on multiple threads or applic
 
 ![Prometheus Increase](./images/promql-increase.excalidraw.png)
 
-### 2.2 `rate`
+### Difference between Range and Time Interval
+
+Before we go any further, let's distinguist between Range and the Time Interval.
+
+- Grafana allows you to pick the time range from the range selector. Options in the Range Selector include: `Last Hour`, `Last 24 Hours`, `Last 7 days` and so on. The visualization panel will show you data points for the selected option.
+- The Time interval is the interval used in the calculations. 
+
+- For example: If the selected range is `Last Hour` and the query is `increase(my_counter{}[10m])` then 1 hour is the range and 10m is the interval.
+- This means that Grafana will calculate how much the value of `my_counter` has increased from _10 minutes ago (the interval)_, at each data point in the _last hour (the selected range)_.
+
+Let's look at another example to see how Grafana evaluates a PromQL query at each data point within a selected range. We'll consider this query:
+
+```
+increase(endpoint_requests_total{endpoint="users_bp.get_user_details",instance="45.33.93.53:8"}[10m])
+```
+
+that calculates the increase over 10m in the API calls to an endpoint called `Get User Details`. We will ask Grafana to perform this query at each data point for the last hour:
+
+![](./images/promql-query-interval-1.png)
+
+Looking at the screenshot above, we see that the increase at 14:10 is 0. Since our query uses an interval of `10m`, then the value at 14:00 must be the same as the value at 14:00. Sure enough, we look at the counter values at these times, the values are the same with the counter value of 1345:
+
+![](./images/promql-query-interval-2.png)
+
+At 14:05, we see a decrease of `1` unit. Since our query uses an interval of `10m`, then the value at 13:55 must be 1 less than as the value at 14:05. Sure enough, we look at the counter values at these times, the values at 13:55 is 1344 and the value at 14:05 is 1345:
+
+![](./images/promql-query-interval-3.png)
+
+- By selecting a different range from the Range selector, we can ask Grafana to perform the same query over a larger or smaller time window. No matter what range we select, the calculation at each data point compares the counter value to 10m prior, as specified in the query
+
+![](./images/promql-query-interval-4.png)
+
+### 1.2 `rate`
 
 - Rate is the rate of increase of the value per second
 - Mathematically you might express this as `Rate = Δv/Δt` where Δt is **always** measured in seconds.
@@ -77,6 +104,10 @@ The same concept applies for applications that run on multiple threads or applic
 - In PromQL this is expressed as `rate(my_counter{}[10m])`
 
 ![Prometheus Rate](./images/promql-rate.excalidraw.png)
+
+# 2. Histograms
+
+
 
 ## 3. Aggregate Functions
 
